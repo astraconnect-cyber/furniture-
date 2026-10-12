@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WoodCraft Pro | Custom Furniture & Joinery Demo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-wood: #2c1810;
+            --accent-gold: #c59b27;
+            --light-bg: #fdfbf7;
+            --dark-card: #1f140e;
+            --text-dark: #2c1810;
+            --text-muted: #6e5d53;
+            --border: #e6dfd5;
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--light-bg); color: var(--text-dark); line-height: 1.6; }
+
+        /* Banner */
+        .client-switcher {
+            background: #111;
+            color: #fff;
+            padding: 10px 5%;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .client-switcher select {
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: none;
+            background: var(--accent-gold);
+            color: #000;
+            font-weight: 700;
+        }
+
+        /* Nav */
+        header { background: #fff; border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1000; }
+        .navbar { display: flex; justify-content: space-between; align-items: center; padding: 16px 5%; max-width: 1200px; margin: 0 auto; }
+        .logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; color: var(--primary-wood); text-decoration: none; }
+        .logo span { color: var(--accent-gold); }
+
+        .btn { padding: 10px 20px; border-radius: 6px; font-weight: 700; text-decoration: none; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; transition: var(--transition); }
+        .btn-gold { background: var(--accent-gold); color: #fff; }
+        .btn-gold:hover { background: #b0881e; }
+        .btn-wa { background: #25d366; color: #fff; }
+
+        /* Hero */
+        .hero { padding: 60px 5%; text-align: center; background: linear-gradient(rgba(44, 24, 16, 0.85), rgba(44, 24, 16, 0.85)), url('https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80') center/cover; color: #fff; }
+        .hero h1 { font-family: 'Playfair Display', serif; font-size: 2.8rem; margin-bottom: 15px; }
+        .hero h1 span { color: var(--accent-gold); }
+        .hero p { max-width: 650px; margin: 0 auto 30px; color: #d1c7bd; font-size: 1.1rem; }
+
+        /* Layout */
+        .main-container { max-width: 1200px; margin: 50px auto; padding: 0 5%; display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 40px; }
+        @media(max-width: 900px) { .main-container { grid-template-columns: 1fr; } }
+
+        /* Catalog */
+        .section-title { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 20px; color: var(--primary-wood); }
+        .furniture-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 20px; }
+        .card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: var(--transition); cursor: pointer; }
+        .card:hover, .card.selected { border-color: var(--accent-gold); box-shadow: 0 10px 20px rgba(0,0,0,0.05); transform: translateY(-3px); }
+        .card img { width: 100%; height: 160px; object-fit: cover; }
+        .card-body { padding: 15px; }
+        .card-title { font-size: 1rem; font-weight: 700; margin-bottom: 5px; }
+        .card-price { color: var(--accent-gold); font-weight: 800; font-size: 1.1rem; }
+
+        /* Configurator Panel */
+        .config-panel { background: #fff; border: 1px solid var(--border); border-radius: var(--radius); padding: 30px; position: sticky; top: 100px; }
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 700; margin-bottom: 8px; font-size: 0.9rem; }
+        .form-control, select { width: 100%; padding: 10px 14px; border: 1px solid var(--border); border-radius: 6px; font-size: 0.95rem; }
+
+        .price-box { background: var(--light-bg); border: 1px dashed var(--accent-gold); padding: 15px; border-radius: 8px; text-align: center; margin: 20px 0; }
+        .price-box span { display: block; font-size: 0.85rem; color: var(--text-muted); }
+        .price-box strong { font-size: 1.6rem; color: var(--primary-wood); font-weight: 800; }
+
+        footer { background: var(--primary-wood); color: #a3958b; text-align: center; padding: 30px 5%; margin-top: 80px; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+
+    <!-- Target Client Switcher -->
+    <div class="client-switcher">
+        <span><i class="fa-solid fa-eye"></i> <strong>Interactive Demo Preview For:</strong></span>
+        <select id="clientSelect" onchange="switchClient()">
+            <option value="DomesticoShop (Lagos)">DomesticoShop (Lagos)</option>
+            <option value="Gemona West Lifestyle (Lekki)">Gemona West Lifestyle (Lekki)</option>
+            <option value="Agatha's Interior (Lagos)">Agatha's Interior (Lagos)</option>
+            <option value="Eezy Office Furniture (Lagos)">Eezy Office Furniture (Lagos)</option>
+            <option value="Bedroom Matters (Abuja)">Bedroom Matters (Abuja)</option>
+            <option value="Azikiwe Woodworks (Port Harcourt)">Azikiwe Woodworks (Port Harcourt)</option>
+        </select>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <nav class="navbar">
+            <a href="#" class="logo"><span id="brandName">DomesticoShop</span> Joinery</a>
+            <a href="#quote" class="btn btn-gold"><i class="fa-solid fa-sliders"></i> Customize Order</a>
+        </nav>
+    </header>
+
+    <!-- Hero -->
+    <section class="hero">
+        <h1>Handcrafted Fine Wood & Modern Furniture</h1>
+        <p>Select a design, configure custom wood types, dimensions, and finishes to get an instant pricing estimate directly on WhatsApp.</p>
+    </section>
+
+    <!-- Main Content -->
+    <div class="main-container">
+        
+        <!-- Product Catalog -->
+        <div>
+            <h2 class="section-title">Select Base Model</h2>
+            <div class="furniture-grid">
+                <div class="card selected" onclick="selectModel('Executive Mahogany Desk', 280000, 'https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&w=600&q=80', this)">
+                    <img src="https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?auto=format&fit=crop&w=600&q=80" alt="Executive Desk">
+                    <div class="card-body">
+                        <div class="card-title">Executive Mahogany Desk</div>
+                        <div class="card-price">₦280,000</div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="selectModel('Royal Velvet 3-Seater Sofa', 450000, 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80', this)">
+                    <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80" alt="Sofa">
+                    <div class="card-body">
+                        <div class="card-title">Royal Velvet 3-Seater Sofa</div>
+                        <div class="card-price">₦450,000</div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="selectModel('8-Seater Hardwood Dining Set', 620000, 'https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=600&q=80', this)">
+                    <img src="https://images.unsplash.com/photo-1617806118233-18e1de247200?auto=format&fit=crop&w=600&q=80" alt="Dining Table">
+                    <div class="card-body">
+                        <div class="card-title">8-Seater Hardwood Dining Set</div>
+                        <div class="card-price">₦620,000</div>
+                    </div>
+                </div>
+
+                <div class="card" onclick="selectModel('Custom Modular Kitchen Cabinet', 850000, 'https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80', this)">
+                    <img src="https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=600&q=80" alt="Cabinet">
+                    <div class="card-body">
+                        <div class="card-title">Custom Modular Cabinet</div>
+                        <div class="card-price">₦850,000</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Configurator -->
+        <div class="config-panel" id="quote">
+            <h2 class="section-title" style="font-size: 1.4rem;">Live Customizer</h2>
+
+            <div class="form-group">
+                <label>Selected Furniture</label>
+                <input type="text" id="selectedItemName" class="form-control" value="Executive Mahogany Desk" readonly>
+            </div>
+
+            <div class="form-group">
+                <label>Material / Wood Finish</label>
+                <select id="woodType" onchange="updatePrice()">
+                    <option value="1.0">Solid Teak Wood (Standard)</option>
+                    <option value="1.2">Red Mahogany Finish (+20%)</option>
+                    <option value="1.35">Imported Walnut Finish (+35%)</option>
+                    <option value="0.85">High-Grade HDF Board (-15%)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Dimensions Scale: <span id="scaleLabel">100%</span></label>
+                <input type="range" id="sizeScale" min="80" max="150" value="100" style="width: 100%;" oninput="updatePrice()">
+            </div>
+
+            <div class="price-box">
+                <span>Estimated Production Cost</span>
+                <strong id="totalPrice">₦280,000</strong>
+            </div>
+
+            <button onclick="sendOrderToWhatsApp()" class="btn btn-wa" style="width: 100%; justify-content: center; padding: 14px; font-size: 1rem;">
+                <i class="fa-brands fa-whatsapp"></i> Order Custom Spec via WhatsApp
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2026 Custom Furniture Web Solutions. Pitch-Ready Demo Site.</p>
+    </footer>
+
+    <!-- JS -->
+    <script>
+        let currentBasePrice = 280000;
+
+        function switchClient() {
+            const selected = document.getElementById('clientSelect').value;
+            document.getElementById('brandName').innerText = selected.split(' ')[0];
+        }
+
+        function selectModel(name, price, img, element) {
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+            element.classList.add('selected');
+
+            document.getElementById('selectedItemName').value = name;
+            currentBasePrice = price;
+            updatePrice();
+        }
+
+        function updatePrice() {
+            const woodMultiplier = parseFloat(document.getElementById('woodType').value);
+            const scale = parseInt(document.getElementById('sizeScale').value);
+            
+            document.getElementById('scaleLabel').innerText = scale + '%';
+
+            const finalPrice = currentBasePrice * woodMultiplier * (scale / 100);
+            document.getElementById('totalPrice').innerText = '₦' + new Intl.NumberFormat().format(Math.round(finalPrice));
+        }
+
+        function sendOrderToWhatsApp() {
+            const client = document.getElementById('clientSelect').value;
+            const item = document.getElementById('selectedItemName').value;
+            const wood = document.getElementById('woodType').options[document.getElementById('woodType').selectedIndex].text;
+            const scale = document.getElementById('sizeScale').value;
+            const price = document.getElementById('totalPrice').innerText;
+
+            const msg = `Hello ${client}! I want to make an inquiry for custom furniture:\n\n🛋️ *Item:* ${item}\n🪵 *Finish:* ${wood}\n📏 *Scale:* ${scale}%\n💰 *Estimated Quote:* ${price}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        updatePrice();
+    </script>
+</body>
+      </html>
+  
